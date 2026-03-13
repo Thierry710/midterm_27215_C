@@ -1,5 +1,3 @@
-# midterm_27215_C
-web tech mid-exam 
 # Online Voting System
 
 A full-stack web application built with **Spring Boot 3.2.0**, **Spring Security 6**, **PostgreSQL**, and **Thymeleaf**. It supports three roles (Admin, Candidate, Voter) and implements a full 5-level Rwanda location hierarchy.
