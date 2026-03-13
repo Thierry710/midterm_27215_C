@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Location Structure</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand fw-bold">📍 Rwanda Location Structure</span>
+    <div class="d-flex gap-2">
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-light btn-sm">← Dashboard</a>
+        <a href="/logout"                class="btn btn-danger btn-sm">Logout</a>
+    </div>
+</nav>
+<div class="container mt-4">
+    <p class="text-muted">
+        🗺️ Full hierarchy: <strong>Province → District → Sector → Cell → Village</strong>.
+        Users are linked by <code>village_id</code> only — the full chain resolves automatically.
+    </p>
+
+    <!-- Province accordion -->
+    <div class="accordion" id="locationAccordion">
+        <div class="accordion-item" th:each="province, pStat : ${provinces}">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold" type="button"
+                        data-bs-toggle="collapse"
+                        th:data-bs-target="'#province' + ${pStat.index}">
+                    🏛️ <span th:text="${province.name}"></span>
+                    <span class="badge bg-primary ms-2" th:text="'Code: ' + ${province.code}"></span>
+                </button>
+            </h2>
+            <div th:id="'province' + ${pStat.index}" class="accordion-collapse collapse">
+                <div class="accordion-body p-0">
+                    <table class="table table-sm table-bordered mb-0">
+                        <thead class="table-secondary">
+                            <tr><th>District</th><th>Sector</th><th>Cell</th><th>Villages</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="district : ${districts}"
+                                th:if="${district.province.id == province.id}">
+                                <td th:text="${district.name}" class="fw-semibold"></td>
+                                <td colspan="3">
+                                    <div th:each="sector : ${sectors}"
+                                         th:if="${sector.district.id == district.id}"
+                                         class="mb-2">
+                                        <span class="badge bg-info text-dark me-1" th:text="${sector.name}"></span>
+                                        <span th:each="cell : ${cells}"
+                                              th:if="${cell.sector.id == sector.id}">
+                                            <span class="text-muted small me-1">↳ <em th:text="${cell.name}"></em>:</span>
+                                            <span th:each="village : ${villages}"
+                                                  th:if="${village.cell.id == cell.id}">
+                                                <span class="badge bg-light text-dark border me-1"
+                                                      th:text="${village.name}"></span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary counts -->
+    <div class="row g-3 mt-4">
+        <div class="col"><div class="card text-center p-3"><h4 th:text="${#lists.size(provinces)}"></h4><small class="text-muted">Provinces</small></div></div>
+        <div class="col"><div class="card text-center p-3"><h4 th:text="${#lists.size(districts)}"></h4><small class="text-muted">Districts</small></div></div>
+        <div class="col"><div class="card text-center p-3"><h4 th:text="${#lists.size(sectors)}"></h4><small class="text-muted">Sectors</small></div></div>
+        <div class="col"><div class="card text-center p-3"><h4 th:text="${#lists.size(cells)}"></h4><small class="text-muted">Cells</small></div></div>
+        <div class="col"><div class="card text-center p-3"><h4 th:text="${#lists.size(villages)}"></h4><small class="text-muted">Villages</small></div></div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

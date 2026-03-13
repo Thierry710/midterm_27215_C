@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Voters by Province</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand fw-bold">📍 Voters by Province</span>
+    <div class="d-flex gap-2">
+        <a th:href="@{/admin/voters}"    class="btn btn-outline-light btn-sm">← All Voters</a>
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-light btn-sm">Dashboard</a>
+        <a href="/logout"                class="btn btn-danger btn-sm">Logout</a>
+    </div>
+</nav>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header fw-bold">
+            Results for: "<span th:text="${search}"></span>"
+            <span class="badge bg-primary ms-2" th:text="${#lists.size(voters)} + ' found'"></span>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Username</th>
+                        <th>Village</th>
+                        <th>Cell</th>
+                        <th>Sector</th>
+                        <th>District</th>
+                        <th>Province</th>
+                        <th>Voted?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="v : ${voters}">
+                        <td th:text="${v.username}"></td>
+                        <td th:text="${v.village != null ? v.village.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.sector.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.sector.district.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.sector.district.province.name : '—'}"></td>
+                        <td>
+                            <span th:if="${v.isHasVoted()}"  class="badge bg-success">Yes</span>
+                            <span th:if="${!v.isHasVoted()}" class="badge bg-secondary">No</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div th:if="${#lists.isEmpty(voters)}" class="p-3 text-muted">
+                No voters found for "<span th:text="${search}"></span>".
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

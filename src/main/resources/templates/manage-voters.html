@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Voters</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand fw-bold">👥 Manage Voters</span>
+    <div class="d-flex gap-2">
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-light btn-sm">← Dashboard</a>
+        <a href="/logout"                class="btn btn-danger btn-sm">Logout</a>
+    </div>
+</nav>
+<div class="container mt-4">
+
+    <!-- Province Search -->
+    <div class="card mb-4">
+        <div class="card-header fw-bold">🔍 Search Voters by Province</div>
+        <div class="card-body">
+            <form th:action="@{/admin/voters/province}" method="get" class="d-flex gap-2">
+                <input type="text" name="search" class="form-control"
+                       placeholder="Province code (e.g. KIG) or name (e.g. Kigali City)" required>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Paginated Voters Table -->
+    <div class="card">
+        <div class="card-header fw-bold">
+            All Voters
+            <span class="badge bg-secondary ms-2" th:text="${votersPage.totalElements} + ' total'"></span>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Username</th>
+                        <th>Village</th>
+                        <th>Cell</th>
+                        <th>Sector</th>
+                        <th>District</th>
+                        <th>Province</th>
+                        <th>Voted?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="v : ${votersPage.content}">
+                        <td th:text="${v.username}"></td>
+                        <td th:text="${v.village != null ? v.village.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.sector.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.sector.district.name : '—'}"></td>
+                        <td th:text="${v.village != null ? v.village.cell.sector.district.province.name : '—'}"></td>
+                        <td>
+                            <span th:if="${v.isHasVoted()}"  class="badge bg-success">Yes</span>
+                            <span th:if="${!v.isHasVoted()}" class="badge bg-secondary">No</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div th:if="${#lists.isEmpty(votersPage.content)}" class="p-3 text-muted">No voters found.</div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <a th:href="@{/admin/voters(page=${currentPage - 1})}"
+               th:classappend="${currentPage == 0} ? 'disabled'"
+               class="btn btn-outline-secondary btn-sm">← Previous</a>
+            <span class="text-muted small">
+                Page <span th:text="${currentPage + 1}"></span> of <span th:text="${totalPages}"></span>
+            </span>
+            <a th:href="@{/admin/voters(page=${currentPage + 1})}"
+               th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'"
+               class="btn btn-outline-secondary btn-sm">Next →</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
