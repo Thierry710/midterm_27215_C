@@ -69,7 +69,7 @@ src/main/java/auca/ac/rw/onlineVotingSystem/
 
 ---
 
-## Requirement 1 — ERD (5+ Tables) ✅
+## Requirement 1 — ERD (5+ Tables) 
 
 The system has **10 entities** forming a complete ERD:
 
@@ -94,7 +94,7 @@ Election >──── election_tags ────< Tag              Candidate >�
 
 ---
 
-## Requirement 2 — Location Saving ✅
+## Requirement 2 — Location Saving 
 
 **Key rule:** A User saves **only `village_id`**. The system auto-resolves the full chain:
 
@@ -167,7 +167,7 @@ Response includes the full resolved chain automatically:
 
 ---
 
-## Requirement 3 — Sorting & Pagination ✅
+## Requirement 3 — Sorting & Pagination 
 
 Implemented in `UserService.java` using Spring Data JPA `PageRequest` and `Sort`:
 
@@ -184,7 +184,7 @@ public Page<User> getVotersPaginated(int page, int size) {
 
 ---
 
-## Requirement 4 — Many-to-Many Relationship ✅
+## Requirement 4 — Many-to-Many Relationship 
 
 `Election` ↔ `Tag` via a join table `election_tags`:
 
@@ -207,7 +207,7 @@ The join table `election_tags` holds two foreign keys (`election_id`, `tag_id`),
 
 ---
 
-## Requirement 5 — One-to-Many Relationship ✅
+## Requirement 5 — One-to-Many Relationship 
 
 Every level of the location hierarchy is One-to-Many:
 
@@ -226,7 +226,7 @@ Same pattern repeats: District→Sector, Sector→Cell, Cell→Village, Village�
 
 ---
 
-## Requirement 6 — One-to-One Relationship ✅
+## Requirement 6 — One-to-One Relationship 
 
 `User` ↔ `VoterProfile` — each user has exactly one profile:
 
@@ -245,7 +245,7 @@ The `unique = true` constraint on `user_id` enforces the one-to-one constraint a
 
 ---
 
-## Requirement 7 — existsBy() Methods ✅
+## Requirement 7 — existsBy() Methods 
 
 Used across all repositories to prevent duplicates before saving:
 
@@ -267,7 +267,7 @@ Spring Data JPA auto-generates the SQL `SELECT COUNT(*) > 0 WHERE ...` query fro
 
 ---
 
-## Requirement 8 — Retrieve Users by Province (code OR name) ✅
+## Requirement 8 — Retrieve Users by Province (code OR name) 
 
 ```java
 // UserRepository.java
